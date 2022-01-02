@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD8EDC683B494443F56755CA /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8ED6073DDD9124FE2F3687 /* RangeSlider.swift */; };
 		FF993FE12781CA6F0018CA55 /* SwiftUiCustomComponentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF993FE02781CA6F0018CA55 /* SwiftUiCustomComponentsApp.swift */; };
 		FF993FE32781CA6F0018CA55 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF993FE22781CA6F0018CA55 /* ContentView.swift */; };
 		FF993FE52781CA700018CA55 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF993FE42781CA700018CA55 /* Assets.xcassets */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AD8ED6073DDD9124FE2F3687 /* RangeSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
 		FF993FDD2781CA6F0018CA55 /* SwiftUiCustomComponents.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUiCustomComponents.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF993FE02781CA6F0018CA55 /* SwiftUiCustomComponentsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUiCustomComponentsApp.swift; sourceTree = "<group>"; };
 		FF993FE22781CA6F0018CA55 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				FF993FF12781CEF20018CA55 /* CustomSliderView.swift */,
 				FF993FE42781CA700018CA55 /* Assets.xcassets */,
 				FF993FE62781CA700018CA55 /* Preview Content */,
+				AD8ED6073DDD9124FE2F3687 /* RangeSlider.swift */,
 			);
 			path = SwiftUiCustomComponents;
 			sourceTree = "<group>";
@@ -159,6 +162,7 @@
 				FF993FF22781CEF20018CA55 /* CustomSliderView.swift in Sources */,
 				FF993FF42781CFC50018CA55 /* HTextView.swift in Sources */,
 				FF993FF02781CEB60018CA55 /* CustomSlider.swift in Sources */,
+				AD8EDC683B494443F56755CA /* RangeSlider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

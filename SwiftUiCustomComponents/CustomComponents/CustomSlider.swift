@@ -29,7 +29,8 @@ class SliderHandle: ObservableObject {
   let sliderValueRange: Double
 
   //Slider Handle
-  var diameter: CGFloat = 40
+  // TODO: FB check this is the same as the initial slider
+  var diameter: CGFloat = 27.5
   var startLocation: CGPoint
 
   //Current Value
@@ -90,17 +91,26 @@ class SliderHandle: ObservableObject {
     }
   }
 
-  //Current Value
+  //  @Published
+  //  var currentValueA: Double = 0
+
   var currentValue: Double {
     return sliderValueStart + currentPercentage.wrappedValue * sliderValueRange
   }
+
+  //Current Value
+  //  var currentValue: Double {
+  //    return sliderValueStart + currentPercentage.wrappedValue * sliderValueRange
+  //  }
 }
 
 class CustomSlider: ObservableObject {
 
   //Slider Size
-  final let width: CGFloat = 300
-  final let lineWidth: CGFloat = 8
+  final let width: CGFloat
+
+  // TODO: FB this should be line heiht
+  final let lineHight: CGFloat = 4
 
   //Slider value range from valueStart to valueEnd
   final let valueStart: Double
@@ -117,13 +127,14 @@ class CustomSlider: ObservableObject {
   final var anyCancellableHigh: AnyCancellable?
   final var anyCancellableLow: AnyCancellable?
 
-  init(start: Double, end: Double) {
+  init(start: Double, end: Double, width: CGFloat) {
     valueStart = start
     valueEnd = end
+    self.width = width
 
     highHandle = SliderHandle(
       sliderWidth: width,
-      sliderHeight: lineWidth,
+      sliderHeight: lineHight,
       sliderValueStart: valueStart,
       sliderValueEnd: valueEnd,
       startPercentage: _highHandleStartPercentage
@@ -131,7 +142,7 @@ class CustomSlider: ObservableObject {
 
     lowHandle = SliderHandle(
       sliderWidth: width,
-      sliderHeight: lineWidth,
+      sliderHeight: lineHight,
       sliderValueStart: valueStart,
       sliderValueEnd: valueEnd,
       startPercentage: _lowHandleStartPercentage
@@ -157,4 +168,3 @@ class CustomSlider: ObservableObject {
     return String(format: "%.2f", highHandle.currentValue - lowHandle.currentValue)
   }
 }
-
