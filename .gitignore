@@ -91,3 +91,5 @@ iOSInjectionProject/
 
 # ignore app code folders
 .idea/
+
+.DS_Store
