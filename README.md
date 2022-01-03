@@ -1,5 +1,7 @@
 # SwiftUiCustomComponents
 
+https://stackoverflow.com/questions/62587261/swiftui-2-handle-range-slider
+
 ## TODO
 
 * Should calculate full width, probably using GeometryReader
