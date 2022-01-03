@@ -1,9 +1,65 @@
 import Combine
 import SwiftUI
 
-// Taken from https://stackoverflow.com/questions/62587261/swiftui-2-handle-range-slider
+struct RangeSlider: View {
 
-//SliderValue to restrict double range: 0.0 to 1.0
+  @ObservedObject
+  var slider: CustomSlider
+
+  init(slider: CustomSlider) {
+    self.slider = slider
+  }
+
+  var body: some View {
+    HStack {
+      Rectangle()
+        .fill(Color.gray.opacity(0.2))
+        .frame(maxWidth: slider.width, maxHeight: slider.penWidth)
+        .overlay(
+          ZStack {
+            //Path between both handles
+
+            SliderPathBetweenView(slider: slider)
+
+            //Low Handle
+            SliderHandleView(handle: slider.lowHandle)
+              .highPriorityGesture(slider.lowHandle.sliderDragGesture)
+
+            //High Handle
+            SliderHandleView(handle: slider.highHandle)
+              .highPriorityGesture(slider.highHandle.sliderDragGesture)
+          }
+        )
+    }
+  }
+}
+
+struct SliderHandleView: View {
+  @ObservedObject var handle: SliderHandle
+
+  var body: some View {
+    Circle()
+      .frame(width: handle.diameter, height: handle.diameter)
+      .foregroundColor(.white)
+      .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 0)
+      //.scaleEffect(handle.onDrag ? 1.3 : 1)
+      .contentShape(Rectangle())
+      .position(x: handle.currentLocation.x, y: handle.currentLocation.y)
+  }
+}
+
+struct SliderPathBetweenView: View {
+  @ObservedObject var slider: CustomSlider
+
+  var body: some View {
+    Path { path in
+      path.move(to: slider.lowHandle.currentLocation)
+      path.addLine(to: slider.highHandle.currentLocation)
+    }
+    .stroke(Color.green, lineWidth: slider.penWidth)
+  }
+}
+
 @propertyWrapper
 struct SliderValue {
   var value: Double
@@ -41,8 +97,8 @@ class SliderHandle: ObservableObject {
   @Published var currentLocation: CGPoint
 
   init(
-    sliderWidth: CGFloat, sliderHeight: CGFloat, sliderValueStart: Double, sliderValueEnd: Double,
-    startPercentage: SliderValue
+          sliderWidth: CGFloat, sliderHeight: CGFloat, sliderValueStart: Double, sliderValueEnd: Double,
+          startPercentage: SliderValue
   ) {
     self.sliderWidth = sliderWidth
     self.sliderHeight = sliderHeight
@@ -51,7 +107,7 @@ class SliderHandle: ObservableObject {
     self.sliderValueRange = sliderValueEnd - sliderValueStart
 
     let startLocation = CGPoint(
-      x: (CGFloat(startPercentage.wrappedValue) / 1.0) * sliderWidth, y: sliderHeight / 2)
+            x: (CGFloat(startPercentage.wrappedValue) / 1.0) * sliderWidth, y: sliderHeight / 2)
 
     self.startLocation = startLocation
     self.currentLocation = startLocation
@@ -61,20 +117,20 @@ class SliderHandle: ObservableObject {
   }
 
   lazy var sliderDragGesture: _EndedGesture<_ChangedGesture<DragGesture>> = DragGesture()
-    .onChanged { value in
-      self.onDrag = true
+          .onChanged { value in
+            self.onDrag = true
 
-      let dragLocation = value.location
+            let dragLocation = value.location
 
-      //Restrict possible drag area
-      self.restrictSliderBtnLocation(dragLocation)
+            //Restrict possible drag area
+            self.restrictSliderBtnLocation(dragLocation)
 
-      //Get current value
-      self.currentPercentage.wrappedValue = Double(self.currentLocation.x / self.sliderWidth)
+            //Get current value
+            self.currentPercentage.wrappedValue = Double(self.currentLocation.x / self.sliderWidth)
 
-    }.onEnded { _ in
-      self.onDrag = false
-    }
+          }.onEnded { _ in
+            self.onDrag = false
+          }
 
   private func restrictSliderBtnLocation(_ dragLocation: CGPoint) {
     //On Slider Width
@@ -91,17 +147,9 @@ class SliderHandle: ObservableObject {
     }
   }
 
-  //  @Published
-  //  var currentValueA: Double = 0
-
   var currentValue: Double {
     return sliderValueStart + currentPercentage.wrappedValue * sliderValueRange
   }
-
-  //Current Value
-  //  var currentValue: Double {
-  //    return sliderValueStart + currentPercentage.wrappedValue * sliderValueRange
-  //  }
 }
 
 class CustomSlider: ObservableObject {
@@ -109,8 +157,7 @@ class CustomSlider: ObservableObject {
   //Slider Size
   final let width: CGFloat
 
-  // TODO: FB this should be line heiht
-  final let lineHight: CGFloat = 4
+  final let penWidth: CGFloat = 4
 
   //Slider value range from valueStart to valueEnd
   final let valueStart: Double
@@ -133,19 +180,19 @@ class CustomSlider: ObservableObject {
     self.width = width
 
     highHandle = SliderHandle(
-      sliderWidth: width,
-      sliderHeight: lineHight,
-      sliderValueStart: valueStart,
-      sliderValueEnd: valueEnd,
-      startPercentage: _highHandleStartPercentage
+            sliderWidth: width,
+            sliderHeight: penWidth,
+            sliderValueStart: valueStart,
+            sliderValueEnd: valueEnd,
+            startPercentage: _highHandleStartPercentage
     )
 
     lowHandle = SliderHandle(
-      sliderWidth: width,
-      sliderHeight: lineHight,
-      sliderValueStart: valueStart,
-      sliderValueEnd: valueEnd,
-      startPercentage: _lowHandleStartPercentage
+            sliderWidth: width,
+            sliderHeight: penWidth,
+            sliderValueStart: valueStart,
+            sliderValueEnd: valueEnd,
+            startPercentage: _lowHandleStartPercentage
     )
 
     anyCancellableHigh = highHandle.objectWillChange.sink { _ in
@@ -159,8 +206,8 @@ class CustomSlider: ObservableObject {
   //Percentages between high and low handle
   var percentagesBetween: String {
     return String(
-      format: "%.2f",
-      highHandle.currentPercentage.wrappedValue - lowHandle.currentPercentage.wrappedValue)
+            format: "%.2f",
+            highHandle.currentPercentage.wrappedValue - lowHandle.currentPercentage.wrappedValue)
   }
 
   //Value between high and low handle
@@ -168,3 +215,4 @@ class CustomSlider: ObservableObject {
     return String(format: "%.2f", highHandle.currentValue - lowHandle.currentValue)
   }
 }
+

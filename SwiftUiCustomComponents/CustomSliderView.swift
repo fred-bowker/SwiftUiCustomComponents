@@ -5,12 +5,10 @@ struct CustomSliderView: View {
   @State
   var singleSliderValue: Double = 0
 
-  // this needs to change we should only change this once also we should take in a step for changing it
-  @State
-  var rangeSliderLowerValue: Double = 18
-
-  @State
-  var rangeSliderUpperValue: Double = 100
+  // TODO: FB need to change this to use a geometryReader so that it automatically calculates width
+  //  of parent
+  @ObservedObject
+  var slider = CustomSlider(start: 18, end: 100, width: 350)
 
   var body: some View {
     VStack {
@@ -23,31 +21,27 @@ struct CustomSliderView: View {
         Slider(value: $singleSliderValue, in: 18...100, step: 1)
                 .accentColor(Color.green)
 
-      }.padding()
+      }
+              .frame(maxWidth: 350)
+              .padding()
 
       // Double slider
 
-        VStack {
+      VStack {
 
-          HTextView(
-                  label: "Double slider value",
+        HTextView(
+                label: "Double slider value",
 
-                  valueText: String(format: "%.0f", rangeSliderLowerValue) + "-"
-                          + String(format: "%.0f", rangeSliderUpperValue))
+                valueText: String(format: "%.0f", slider.highHandle.currentValue) + "-"
+                        + String(format: "%.0f", slider.lowHandle.currentValue))
 
-          GeometryReader { geometry in
-          RangeSlider(
-                  lowerValue: $rangeSliderLowerValue,
-                  upperValue: $rangeSliderUpperValue,
-                  valueStart: 18,
-                  valueEnd: 100,
-                  width: geometry.size.width)
-        }
-      }.padding()
-
+        //GeometryReader { geometry in
+        RangeSlider(slider: slider)
+        //}
+      }
+              .padding()
     }
   }
-
 }
 
 //struct SliderView: View {
